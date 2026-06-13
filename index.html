@@ -1,1557 +1,665 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>감자튀김 공화국 — 공식 포털</title>
-  <meta name="description" content="감자튀김 공화국 공식 정부 포털. 국가 소개, 정부 기관, 국가 통계, 최신 소식을 확인하세요." />
-  <style>
-    /* ============================================================
-       CSS 커스텀 프로퍼티 (토큰 시스템)
-       ============================================================ */
-    :root {
-      /* 팔레트 */
-      --navy:      #0d2b5e;   /* 메인 딥 네이비 */
-      --royal:     #1a4fa0;   /* 밝은 로열 블루 */
-      --sky:       #e8f0fb;   /* 연한 배경 블루 */
-      --gold:      #c9922a;   /* 금색 강조 */
-      --gold-lt:   #f0c96b;   /* 밝은 금색 */
-      --gold-bg:   #fdf6e3;   /* 금색 배경 틴트 */
-      --white:     #ffffff;
-      --off-white: #f4f7fc;
-      --text-dark: #111827;
-      --text-mid:  #374151;
-      --text-soft: #6b7280;
-      --border:    #d1dce9;
-      --shadow-sm: 0 1px 4px rgba(13,43,94,.08);
-      --shadow-md: 0 4px 18px rgba(13,43,94,.12);
-      --shadow-lg: 0 12px 40px rgba(13,43,94,.16);
-
-      /* 타이포그래피 */
-      --font-display: 'Georgia', 'Batang', serif;
-      --font-body:    system-ui, -apple-system, 'Segoe UI', sans-serif;
-      --font-ui:      var(--font-body);
-
-      /* 레이아웃 */
-      --max-w: 1200px;
-      --radius: 8px;
-      --radius-lg: 16px;
-    }
-
-    /* ============================================================
-       리셋 & 기반
-       ============================================================ */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { scroll-behavior: smooth; font-size: 16px; }
-
-    body {
-      font-family: var(--font-body);
-      color: var(--text-dark);
-      background: var(--white);
-      line-height: 1.65;
-    }
-
-    a { color: inherit; text-decoration: none; }
-    img { display: block; max-width: 100%; }
-    ul { list-style: none; }
-
-    .container {
-      width: 100%;
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* ============================================================
-       상단 띠 (알림 바)
-       ============================================================ */
-    .top-bar {
-      background: var(--navy);
-      color: rgba(255,255,255,.85);
-      font-size: .78rem;
-      letter-spacing: .03em;
-      padding: 7px 0;
-    }
-    .top-bar .container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-    .top-bar-links { display: flex; gap: 20px; }
-    .top-bar-links a:hover { color: var(--gold-lt); transition: color .2s; }
-
-    /* ============================================================
-       헤더
-       ============================================================ */
-    .site-header {
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      padding: 0 24px;
-      max-width: var(--max-w);
-      margin: 0 auto;
-      height: 72px;
-    }
-
-    /* 로고 + 국가명 */
-    .site-logo {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-shrink: 0;
-    }
-    .logo-emblem {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: var(--navy);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      box-shadow: 0 0 0 3px var(--gold);
-      flex-shrink: 0;
-    }
-    .logo-text-wrap { line-height: 1.25; }
-    .logo-text-kr {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: var(--navy);
-      letter-spacing: -.02em;
-    }
-    .logo-text-en {
-      font-size: .68rem;
-      color: var(--text-soft);
-      letter-spacing: .06em;
-      text-transform: uppercase;
-    }
-
-    /* 네비게이션 */
-    .main-nav { display: flex; gap: 4px; }
-    .main-nav a {
-      font-size: .88rem;
-      font-weight: 500;
-      color: var(--text-mid);
-      padding: 8px 14px;
-      border-radius: 6px;
-      transition: background .18s, color .18s;
-      white-space: nowrap;
-    }
-    .main-nav a:hover,
-    .main-nav a.active {
-      background: var(--sky);
-      color: var(--royal);
-    }
-
-    /* 햄버거 버튼 (모바일) */
-    .nav-toggle {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      padding: 8px;
-      border: none;
-      background: none;
-    }
-    .nav-toggle span {
-      display: block;
-      width: 24px;
-      height: 2px;
-      background: var(--navy);
-      border-radius: 2px;
-      transition: transform .3s, opacity .3s;
-    }
-
-    /* 모바일 메뉴 열림 상태 */
-    .nav-open .main-nav {
-      display: flex;
-      flex-direction: column;
-      position: absolute;
-      top: 72px;
-      left: 0;
-      right: 0;
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 24px;
-      gap: 4px;
-      box-shadow: var(--shadow-md);
-    }
-    .nav-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .nav-open .nav-toggle span:nth-child(2) { opacity: 0; }
-    .nav-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-    /* ============================================================
-       히어로 배너
-       ============================================================ */
-    .hero {
-      background: linear-gradient(135deg, var(--navy) 0%, var(--royal) 55%, #2662c4 100%);
-      color: var(--white);
-      padding: 80px 0 90px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* 배경 장식 원 */
-    .hero::before,
-    .hero::after {
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      opacity: .07;
-      background: var(--white);
-    }
-    .hero::before { width: 600px; height: 600px; top: -200px; right: -150px; }
-    .hero::after  { width: 400px; height: 400px; bottom: -200px; left: -100px; }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: center;
-      position: relative;
-    }
-
-    /* 히어로 텍스트 */
-    .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: .78rem;
-      font-weight: 600;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--gold-lt);
-      margin-bottom: 20px;
-    }
-    .hero-eyebrow::before {
-      content: '';
-      display: block;
-      width: 28px; height: 2px;
-      background: var(--gold-lt);
-    }
-    .hero-title {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 4vw, 3rem);
-      line-height: 1.2;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-    .hero-title em {
-      font-style: normal;
-      color: var(--gold-lt);
-    }
-    .hero-desc {
-      font-size: 1.05rem;
-      line-height: 1.8;
-      color: rgba(255,255,255,.82);
-      max-width: 460px;
-      margin-bottom: 36px;
-    }
-    .hero-cta-group { display: flex; gap: 14px; flex-wrap: wrap; }
-    .btn-primary {
-      background: var(--gold);
-      color: var(--white);
-      font-weight: 600;
-      font-size: .9rem;
-      padding: 13px 28px;
-      border-radius: var(--radius);
-      transition: background .2s, transform .15s, box-shadow .2s;
-      box-shadow: 0 4px 14px rgba(201,146,42,.35);
-    }
-    .btn-primary:hover {
-      background: #b07f22;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(201,146,42,.45);
-    }
-    .btn-ghost {
-      border: 2px solid rgba(255,255,255,.5);
-      color: var(--white);
-      font-weight: 600;
-      font-size: .9rem;
-      padding: 11px 26px;
-      border-radius: var(--radius);
-      transition: border-color .2s, background .2s, transform .15s;
-    }
-    .btn-ghost:hover {
-      border-color: var(--white);
-      background: rgba(255,255,255,.1);
-      transform: translateY(-2px);
-    }
-
-    /* 히어로 이미지 패널 */
-    .hero-panel {
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      backdrop-filter: blur(8px);
-    }
-    .hero-flag-display {
-      background: linear-gradient(160deg, #1a4fa0, #0d2b5e);
-      border-radius: 10px;
-      height: 180px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 5rem;
-      margin-bottom: 20px;
-      border: 2px solid rgba(255,255,255,.15);
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-flag-display::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 20px,
-        rgba(255,255,255,.03) 20px,
-        rgba(255,255,255,.03) 40px
-      );
-    }
-    .hero-stats-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-    .hero-stat {
-      background: rgba(255,255,255,.1);
-      border-radius: var(--radius);
-      padding: 14px 10px;
-      text-align: center;
-    }
-    .hero-stat-num {
-      font-family: var(--font-display);
-      font-size: 1.35rem;
-      font-weight: bold;
-      color: var(--gold-lt);
-      display: block;
-    }
-    .hero-stat-label {
-      font-size: .72rem;
-      color: rgba(255,255,255,.7);
-      margin-top: 3px;
-    }
-
-    /* ============================================================
-       섹션 공통
-       ============================================================ */
-    .section { padding: 80px 0; }
-    .section-alt { background: var(--off-white); }
-    .section-gold { background: var(--gold-bg); border-top: 3px solid var(--gold); border-bottom: 3px solid var(--gold); }
-
-    .section-head {
-      margin-bottom: 48px;
-    }
-    .section-eyebrow {
-      display: inline-block;
-      font-size: .72rem;
-      font-weight: 700;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 10px;
-    }
-    .section-title {
-      font-family: var(--font-display);
-      font-size: clamp(1.4rem, 3vw, 1.9rem);
-      color: var(--navy);
-      font-weight: bold;
-      margin-bottom: 12px;
-    }
-    .section-desc {
-      font-size: .97rem;
-      color: var(--text-soft);
-      max-width: 520px;
-    }
-    .divider-gold {
-      width: 48px; height: 3px;
-      background: var(--gold);
-      border-radius: 2px;
-      margin: 14px 0 0;
-    }
-
-    /* ============================================================
-       국가 소개
-       ============================================================ */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: start;
-    }
-    .about-content p {
-      color: var(--text-mid);
-      margin-bottom: 18px;
-      font-size: .97rem;
-    }
-    .about-feature-list {
-      margin-top: 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .about-feature {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      background: var(--sky);
-      border-radius: var(--radius);
-      padding: 16px 18px;
-      border-left: 4px solid var(--royal);
-    }
-    .about-feature-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
-    .about-feature-text strong {
-      display: block;
-      font-size: .9rem;
-      color: var(--navy);
-      margin-bottom: 3px;
-    }
-    .about-feature-text span { font-size: .84rem; color: var(--text-soft); }
-
-    .about-ideals {
-      background: var(--navy);
-      border-radius: var(--radius-lg);
-      padding: 36px;
-      color: var(--white);
-    }
-    .ideal-title {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      color: var(--gold-lt);
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .ideal-item {
-      display: flex;
-      gap: 14px;
-      margin-bottom: 20px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid rgba(255,255,255,.1);
-    }
-    .ideal-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-    .ideal-num {
-      font-family: var(--font-display);
-      font-size: 1.8rem;
-      color: var(--gold);
-      font-weight: bold;
-      line-height: 1;
-      flex-shrink: 0;
-      width: 36px;
-    }
-    .ideal-text strong { display: block; font-size: .92rem; margin-bottom: 4px; }
-    .ideal-text span { font-size: .82rem; color: rgba(255,255,255,.65); }
-
-    /* ============================================================
-       정부 기관 카드
-       ============================================================ */
-    .gov-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 24px;
-    }
-    .gov-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 32px 28px;
-      box-shadow: var(--shadow-sm);
-      transition: box-shadow .25s, transform .25s;
-      position: relative;
-      overflow: hidden;
-    }
-    .gov-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 4px;
-      background: var(--royal);
-    }
-    .gov-card:hover {
-      box-shadow: var(--shadow-lg);
-      transform: translateY(-4px);
-    }
-    .gov-card-icon {
-      font-size: 2.4rem;
-      margin-bottom: 16px;
-    }
-    .gov-card-title {
-      font-family: var(--font-display);
-      font-size: 1.15rem;
-      color: var(--navy);
-      font-weight: bold;
-      margin-bottom: 6px;
-    }
-    .gov-card-incumbent {
-      font-size: .78rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      color: var(--gold);
-      margin-bottom: 12px;
-    }
-    .gov-card-desc {
-      font-size: .86rem;
-      color: var(--text-soft);
-      line-height: 1.6;
-    }
-
-    /* ============================================================
-       국가 통계 카드
-       ============================================================ */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-    }
-    .stat-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 28px 24px;
-      text-align: center;
-      box-shadow: var(--shadow-sm);
-      transition: box-shadow .25s, transform .25s;
-    }
-    .stat-card:hover {
-      box-shadow: var(--shadow-md);
-      transform: translateY(-3px);
-    }
-    .stat-card-icon { font-size: 2rem; margin-bottom: 12px; }
-    .stat-card-value {
-      font-family: var(--font-display);
-      font-size: 1.7rem;
-      font-weight: bold;
-      color: var(--navy);
-      display: block;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-    .stat-card-label {
-      font-size: .8rem;
-      font-weight: 600;
-      color: var(--text-soft);
-      text-transform: uppercase;
-      letter-spacing: .06em;
-    }
-    .stat-card-sub {
-      font-size: .78rem;
-      color: var(--text-soft);
-      margin-top: 8px;
-    }
-    .stat-card.highlight { background: var(--navy); border-color: var(--navy); }
-    .stat-card.highlight .stat-card-value,
-    .stat-card.highlight .stat-card-label,
-    .stat-card.highlight .stat-card-sub { color: var(--white); }
-    .stat-card.highlight .stat-card-value { color: var(--gold-lt); }
-
-    /* ============================================================
-       최신 소식
-       ============================================================ */
-    .news-section-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-    }
-    .news-col-title {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      color: var(--navy);
-      font-weight: bold;
-      padding-bottom: 14px;
-      border-bottom: 2px solid var(--navy);
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    /* 뉴스 카드 */
-    .news-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      margin-bottom: 18px;
-      box-shadow: var(--shadow-sm);
-      transition: box-shadow .22s, transform .22s;
-      display: flex;
-      flex-direction: column;
-    }
-    .news-card:hover {
-      box-shadow: var(--shadow-md);
-      transform: translateY(-2px);
-    }
-    .news-card-thumb {
-      height: 120px;
-      background: linear-gradient(135deg, var(--royal), var(--navy));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.8rem;
-    }
-    .news-card-body { padding: 18px; }
-    .news-badge {
-      display: inline-block;
-      font-size: .68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      padding: 3px 8px;
-      border-radius: 4px;
-      background: var(--sky);
-      color: var(--royal);
-      margin-bottom: 8px;
-    }
-    .news-card-title-text {
-      font-size: .95rem;
-      font-weight: 600;
-      color: var(--navy);
-      line-height: 1.45;
-      margin-bottom: 8px;
-    }
-    .news-card-date {
-      font-size: .76rem;
-      color: var(--text-soft);
-    }
-    /* 공지사항 아이템 */
-    .notice-item {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-      padding: 16px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .notice-item:last-child { border-bottom: none; }
-    .notice-badge {
-      font-size: .68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-      padding: 4px 8px;
-      border-radius: 4px;
-      background: var(--navy);
-      color: var(--white);
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-    .notice-badge.urgent { background: #c0392b; }
-    .notice-text strong {
-      display: block;
-      font-size: .9rem;
-      color: var(--navy);
-      margin-bottom: 4px;
-      line-height: 1.4;
-    }
-    .notice-text span { font-size: .76rem; color: var(--text-soft); }
-
-    /* ============================================================
-       패스파인더 (퀵링크 바)
-       ============================================================ */
-    .quick-links {
-      background: var(--navy);
-      padding: 32px 0;
-    }
-    .quick-links-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-    }
-    .quick-link {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      padding: 18px 12px;
-      border-radius: var(--radius);
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.12);
-      color: var(--white);
-      font-size: .82rem;
-      font-weight: 500;
-      text-align: center;
-      transition: background .2s, transform .2s;
-    }
-    .quick-link:hover {
-      background: rgba(255,255,255,.16);
-      transform: translateY(-2px);
-    }
-    .quick-link-icon { font-size: 1.6rem; }
-
-    /* ============================================================
-       푸터
-       ============================================================ */
-    .site-footer {
-      background: #0a1f45;
-      color: rgba(255,255,255,.75);
-      padding: 60px 0 0;
-    }
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 40px;
-      padding-bottom: 48px;
-      border-bottom: 1px solid rgba(255,255,255,.1);
-    }
-    .footer-brand { }
-    .footer-brand-name {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      color: var(--white);
-      font-weight: bold;
-      margin-bottom: 6px;
-    }
-    .footer-brand-en {
-      font-size: .7rem;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--gold-lt);
-      margin-bottom: 16px;
-    }
-    .footer-brand-desc {
-      font-size: .82rem;
-      line-height: 1.7;
-      max-width: 260px;
-    }
-    .footer-col-title {
-      font-size: .8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      color: var(--gold-lt);
-      margin-bottom: 16px;
-    }
-    .footer-links { display: flex; flex-direction: column; gap: 10px; }
-    .footer-links a {
-      font-size: .84rem;
-      color: rgba(255,255,255,.65);
-      transition: color .18s;
-    }
-    .footer-links a:hover { color: var(--white); }
-    .footer-contact-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      font-size: .82rem;
-      margin-bottom: 10px;
-    }
-    .footer-contact-item span:first-child { color: var(--gold-lt); flex-shrink: 0; margin-top: 1px; }
-    .footer-bottom {
-      padding: 20px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      font-size: .78rem;
-      color: rgba(255,255,255,.45);
-    }
-    .footer-bottom-links { display: flex; gap: 20px; }
-    .footer-bottom-links a:hover { color: rgba(255,255,255,.75); transition: color .18s; }
-
-    /* ============================================================
-       스크롤 투 탑 버튼
-       ============================================================ */
-    #scroll-top {
-      position: fixed;
-      bottom: 28px; right: 28px;
-      width: 44px; height: 44px;
-      background: var(--navy);
-      color: var(--white);
-      border: none;
-      border-radius: 50%;
-      font-size: 1.2rem;
-      cursor: pointer;
-      box-shadow: var(--shadow-md);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .3s, transform .3s;
-      z-index: 200;
-      display: flex; align-items: center; justify-content: center;
-    }
-    #scroll-top.visible { opacity: 1; pointer-events: auto; }
-    #scroll-top:hover { transform: translateY(-3px); background: var(--royal); }
-
-    /* ============================================================
-       애니메이션 (스크롤 페이드 인)
-       ============================================================ */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity .6s ease, transform .6s ease;
-    }
-    .fade-in.visible {
-      opacity: 1;
-      transform: none;
-    }
-
-    /* ============================================================
-       반응형 — 태블릿
-       ============================================================ */
-    @media (max-width: 900px) {
-      .hero-grid        { grid-template-columns: 1fr; gap: 40px; }
-      .hero-panel       { display: none; } /* 모바일에서 패널 숨김 */
-      .about-grid       { grid-template-columns: 1fr; }
-      .news-section-grid{ grid-template-columns: 1fr; }
-      .footer-grid      { grid-template-columns: 1fr 1fr; }
-    }
-
-    /* ============================================================
-       반응형 — 모바일
-       ============================================================ */
-    @media (max-width: 600px) {
-      .top-bar .container { flex-direction: column; gap: 4px; font-size: .72rem; }
-      .section { padding: 56px 0; }
-      .nav-toggle { display: flex; }
-      .main-nav { display: none; }
-      .hero { padding: 56px 0; }
-      .hero-title { font-size: 1.7rem; }
-      .hero-cta-group { flex-direction: column; }
-      .btn-primary, .btn-ghost { text-align: center; }
-      .gov-grid { grid-template-columns: 1fr 1fr; }
-      .stats-grid { grid-template-columns: 1fr 1fr; }
-      .footer-grid { grid-template-columns: 1fr; gap: 28px; }
-      .footer-bottom { flex-direction: column; align-items: flex-start; }
-      .quick-links-grid { grid-template-columns: repeat(3, 1fr); }
-    }
-    @media (max-width: 380px) {
-      .gov-grid { grid-template-columns: 1fr; }
-      .stats-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    /* 접근성 - 포커스 링 */
-    a:focus-visible,
-    button:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 3px;
-    }
-
-    /* 동작 줄이기 */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
-      .fade-in { opacity: 1; transform: none; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="감자튀김 공화국 공식 포털 - 자유, 혁신, 번영을 추구하는 미래 국가">
+    <meta name="keywords" content="감자튀김 공화국, 정부, 국가 포털, 공공 서비스">
+    <meta name="author" content="감자튀김 공화국 정부">
+    <meta name="theme-color" content="#001f4d">
+    <title>감자튀김 공화국 공식 포털 - Republic of French Fries</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <!-- ================================================================
-       상단 알림 띠
-       ================================================================ -->
-  <div class="top-bar" role="banner" aria-label="사이트 상단 정보">
-    <div class="container">
-      <span>🇰🇷 대한민국이 아닙니다. 여기는 <strong>감자튀김 공화국</strong>입니다.</span>
-      <div class="top-bar-links">
-        <a href="#" aria-label="사이트맵">사이트맵</a>
-        <a href="#" aria-label="언어 선택">English</a>
-        <a href="#" aria-label="접근성 설정">접근성</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================================================================
-       헤더 & 메인 네비게이션
-       ================================================================ -->
-  <header class="site-header" id="site-header" role="navigation" aria-label="주요 메뉴">
-    <div class="header-inner">
-
-      <!-- 로고 -->
-      <a href="#" class="site-logo" aria-label="감자튀김 공화국 홈으로">
-        <div class="logo-emblem" aria-hidden="true">🍟</div>
-        <div class="logo-text-wrap">
-          <div class="logo-text-kr">감자튀김 공화국</div>
-          <div class="logo-text-en">Republic of French Fries</div>
+    <!-- ================================================================
+         헤더 및 네비게이션
+         ================================================================ -->
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">
+                <div class="logo-icon">🍟</div>
+                <span>감자튀김 공화국</span>
+            </a>
+            <div class="header-right">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="검색어 입력">
+                    <button type="button" id="searchBtn" aria-label="검색">🔍</button>
+                </div>
+                <select class="language-selector" id="languageSelector" aria-label="언어 선택">
+                    <option value="ko">한국어</option>
+                    <option value="en">English</option>
+                </select>
+                <button class="menu-toggle" id="menuToggle" aria-label="메뉴 열기">☰</button>
+            </div>
         </div>
-      </a>
+    </header>
 
-      <!-- 햄버거 토글 (모바일) -->
-      <button class="nav-toggle" id="nav-toggle" aria-label="메뉴 열기/닫기" aria-expanded="false" aria-controls="main-nav">
-        <span></span><span></span><span></span>
-      </button>
-
-      <!-- 네비게이션 -->
-      <nav id="main-nav" class="main-nav">
-        <a href="#about"   class="active" aria-current="page">국가 소개</a>
-        <a href="#gov">정부 기관</a>
-        <a href="#stats">국가 통계</a>
-        <a href="#news">최신 소식</a>
-        <a href="#contact">연락처</a>
-      </nav>
-
-    </div>
-  </header>
-
-  <!-- ================================================================
-       메인 히어로 배너
-       ================================================================ -->
-  <main>
-  <section class="hero" id="hero" aria-labelledby="hero-heading">
-    <div class="container">
-      <div class="hero-grid">
-
-        <!-- 히어로 텍스트 -->
-        <div class="hero-text">
-          <div class="hero-eyebrow" aria-hidden="true">공식 정부 포털</div>
-          <h1 class="hero-title" id="hero-heading">
-            감자튀김 공화국에<br/>
-            <em>오신 것을 환영합니다</em>
-          </h1>
-          <p class="hero-desc">
-            황금빛 자유와 바삭한 번영을 향해 나아가는 나라,
-            감자튀김 공화국. 세계에서 가장 맛있는 이상을 현실로
-            만들어 가는 민주공화국의 공식 포털에 오신 여러분을
-            진심으로 환영합니다.
-          </p>
-          <div class="hero-cta-group">
-            <a href="#about" class="btn-primary">국가 소개 보기</a>
-            <a href="#gov"   class="btn-ghost">정부 기관 안내</a>
-          </div>
+    <nav id="navMenu">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#intro" class="nav-link active" data-section="intro">국가소개</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#government" class="nav-link" data-section="government">정부</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#parliament" class="nav-link" data-section="parliament">국가평원</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#defense" class="nav-link" data-section="defense">국방</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#education" class="nav-link" data-section="education">교육</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#law" class="nav-link" data-section="law">법률정보</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#resources" class="nav-link" data-section="resources">자료실</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#news" class="nav-link" data-section="news">소식</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link" data-section="contact">문의</a>
+                </li>
+            </ul>
         </div>
+    </nav>
 
-        <!-- 히어로 패널 (데스크탑 전용) -->
-        <div class="hero-panel" aria-hidden="true">
-          <div class="hero-flag-display" role="img" aria-label="감자튀김 공화국 국가 상징">
-            🍟
-          </div>
-          <div class="hero-stats-row">
-            <div class="hero-stat">
-              <span class="hero-stat-num">4.2백만</span>
-              <div class="hero-stat-label">인구</div>
+    <!-- ================================================================
+         메인 콘텐츠
+         ================================================================ -->
+    <main>
+        <!-- 히어로 섹션 -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>감자튀김 공화국</h1>
+                <div class="hero-tagline">자유 · 혁신 · 번영</div>
+                <p class="hero-subtitle">미래를 향한 새로운 국가 비전</p>
+                <div class="hero-buttons">
+                    <a href="#intro" class="btn btn-primary">국가소개</a>
+                    <a href="#news" class="btn btn-secondary">최신 소식</a>
+                </div>
             </div>
-            <div class="hero-stat">
-              <span class="hero-stat-num">12,450㎢</span>
-              <div class="hero-stat-label">면적</div>
+        </section>
+
+        <!-- 국가소개 섹션 -->
+        <section id="intro" class="section section-white">
+            <div class="container">
+                <div class="section-title">
+                    <h2>국가소개</h2>
+                    <p>감자튀김 공화국에 대해 알아보세요</p>
+                </div>
+
+                <div class="grid grid-3">
+                    <div class="card">
+                        <div class="card-icon">🏛️</div>
+                        <h3>국가 개요</h3>
+                        <p>감자튀김 공화국은 자유와 민주주의를 기반으로 설립된 현대적 국가입니다. 혁신적인 정책과 국민 중심의 행정을 통해 번영하는 미래를 추구하고 있습니다.</p>
+                        <a href="#" class="card-link">자세히 보기 →</a>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">📜</div>
+                        <h3>건국 이념</h3>
+                        <p>자유, 평등, 정의를 기본 가치로 삼아 모든 국민이 행복하고 존엄한 삶을 영위할 수 있는 사회를 건설하는 것이 우리의 건국 이념입니다.</p>
+                        <a href="#" class="card-link">자세히 보기 →</a>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">🎖️</div>
+                        <h3>국가 상징</h3>
+                        <p>국기, 국가, 국화 등 감자튀김 공화국의 국가 상징들은 우리의 정체성과 가치를 대표합니다. 각 상징은 깊은 의미와 역사를 담고 있습니다.</p>
+                        <a href="#" class="card-link">자세히 보기 →</a>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">⚖️</div>
+                        <h3>국가 체계</h3>
+                        <p>감자튀김 공화국은 대통령 중심의 민주주의 체제를 채택하고 있습니다. 행정부, 입법부(국가평원), 사법부가 상호 견제와 균형을 이루고 있습니다.</p>
+                        <a href="#" class="card-link">자세히 보기 →</a>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">📅</div>
+                        <h3>국가 연혁</h3>
+                        <p>건국부터 현재까지 감자튀김 공화국의 주요 역사적 사건들과 발전 과정을 소개합니다. 우리의 과거는 미래의 기반이 됩니다.</p>
+                        <a href="#" class="card-link">자세히 보기 →</a>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">🚀</div>
+                        <h3>국가 목표</h3>
+                        <p>감자튀김 공화국은 2050년까지 세계 최고 수준의 복지 국가, 혁신 국가, 문화 국가로 도약하는 것을 목표로 하고 있습니다.</p>
+                        <a href="#" class="card-link">자세히 보기 →</a>
+                    </div>
+                </div>
             </div>
-            <div class="hero-stat">
-              <span class="hero-stat-num">1947</span>
-              <div class="hero-stat-label">건국연도</div>
+        </section>
+
+        <!-- 정부 섹션 -->
+        <section id="government" class="section section-light">
+            <div class="container">
+                <div class="section-title">
+                    <h2>정부</h2>
+                    <p>감자튀김 공화국의 정부 조직을 소개합니다</p>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-button active" data-tab="president">대통령</button>
+                        <button class="tab-button" data-tab="executive">행정부</button>
+                        <button class="tab-button" data-tab="parliament">국가평원</button>
+                        <button class="tab-button" data-tab="independent">독립기관</button>
+                    </div>
+
+                    <div id="president" class="tab-content active">
+                        <div class="grid grid-2">
+                            <div class="card">
+                                <div class="card-icon">👨‍💼</div>
+                                <h3>대통령</h3>
+                                <p>대통령은 감자튀김 공화국의 국가원수이자 행정부의 수장입니다. 국가 전체를 대표하며 국내외 정책의 최고 결정권을 행사합니다.</p>
+                                <a href="#" class="card-link">자세히 보기 →</a>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon">🏢</div>
+                                <h3>대통령실</h3>
+                                <p>대통령실은 대통령의 정책 수립 및 집행을 보좌하는 기구입니다. 국가 주요 정책의 기획 및 조정 역할을 담당합니다.</p>
+                                <a href="#" class="card-link">자세히 보기 →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="executive" class="tab-content">
+                        <div class="grid grid-3">
+                            <div class="card">
+                                <div class="card-icon">🏛️</div>
+                                <h3>국무총리</h3>
+                                <p>국무총리는 대통령을 보좌하여 행정부의 업무를 총괄합니다. 각 부처 간의 조정 및 정책 집행을 주도합니다.</p>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon">📋</div>
+                                <h3>부처</h3>
+                                <p>행정부는 외교부, 국방부, 재정부, 교육부 등 여러 부처로 구성되어 있습니다. 각 부처는 전문 분야의 정책을 담당합니다.</p>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon">🔧</div>
+                                <h3>청(廳)</h3>
+                                <p>각 청은 특정 분야의 행정을 담당하는 기구입니다. 국민 생활과 밀접한 다양한 서비스를 제공합니다.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="parliament" class="tab-content">
+                        <div class="grid grid-2">
+                            <div class="card">
+                                <div class="card-icon">🗳️</div>
+                                <h3>국가평원</h3>
+                                <p>국가평원은 감자튀김 공화국의 입법기관입니다. 국민의 대표로 구성되어 법률 제정 및 국정 감시 역할을 수행합니다.</p>
+                                <a href="#" class="card-link">자세히 보기 →</a>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon">📜</div>
+                                <h3>입법 활동</h3>
+                                <p>국가평원은 국민의 이익을 대변하여 다양한 법안을 심의하고 의결합니다. 투명하고 민주적인 입법 과정을 추구합니다.</p>
+                                <a href="#" class="card-link">자세히 보기 →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="independent" class="tab-content">
+                        <div class="grid grid-3">
+                            <div class="card">
+                                <div class="card-icon">🔍</div>
+                                <h3>감사원</h3>
+                                <p>감사원은 정부의 재정 운영과 공무원의 직무 수행을 감시하고 감사합니다. 국가 행정의 투명성과 효율성을 보장합니다.</p>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon">⚖️</div>
+                                <h3>대법원</h3>
+                                <p>대법원은 감자튀김 공화국의 최고 사법기관입니다. 법의 해석과 적용에 있어 최종 권한을 행사합니다.</p>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon">🗳️</div>
+                                <h3>선거관리위원회</h3>
+                                <p>선거관리위원회는 공정하고 투명한 선거 운영을 담당합니다. 민주주의의 기초인 선거를 관리합니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+        </section>
+
+        <!-- 국방 섹션 -->
+        <section id="defense" class="section section-white">
+            <div class="container">
+                <div class="section-title">
+                    <h2>국방</h2>
+                    <p>감자튀김 공화국의 국방력을 소개합니다</p>
+                </div>
+
+                <div class="grid grid-4">
+                    <div class="card military-card">
+                        <div class="card-icon">🪖</div>
+                        <h3>육군</h3>
+                        <p>육군은 감자튀김 공화국의 육지 방위를 담당합니다. 첨단 장비와 우수한 인력으로 국가 안보를 수호합니다.</p>
+                        <a href="#" class="card-link">자세히 보기 →</a>
+                    </div>
+
+                    <div class="card military-card">
+                        <div class="card-icon">⚓</div>
+                        <h3>해군</h3>
+                        <p>해군은 해상 방위와 해양 주권 수호를 담당합니다. 현대적인 함정과 해상 전력으로 국가를 보호합니다.</p>
+                        <a href="#" class="card-link">자세히 보기 →</a>
+                    </div>
+
+                    <div class="card military-card">
+                        <div class="card-icon">✈️</div>
+                        <h3>공군</h3>
+                        <p>공군은 하늘 영역의 방위를 담당합니다. 첨단 전투기와 미사일 체계로 공중 우위를 확보합니다.</p>
+                        <a href="#" class="card-link">자세히 보기 →</a>
+                    </div>
+
+                    <div class="card military-card">
+                        <div class="card-icon">🎖️</div>
+                        <h3>해병대</h3>
+                        <p>해병대는 상륙 작전 및 해안 방위를 담당합니다. 기동력과 전투력을 갖춘 정예 부대입니다.</p>
+                        <a href="#" class="card-link">자세히 보기 →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 교육 섹션 -->
+        <section id="education" class="section section-light">
+            <div class="container">
+                <div class="section-title">
+                    <h2>교육</h2>
+                    <p>감자튀김 공화국의 교육 기관을 소개합니다</p>
+                </div>
+
+                <div class="grid grid-4">
+                    <div class="card">
+                        <div class="card-icon">🎓</div>
+                        <h3>감튀초등학교</h3>
+                        <p>감튀초등학교는 기초 교육을 담당하는 기관입니다. 미래 세대의 창의력과 인성 발달을 중점으로 교육합니다.</p>
+                        <a href="#" class="card-link">자세히 보기 →</a>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">📚</div>
+                        <h3>감튀중학교</h3>
+                        <p>감튀중학교는 중등 교육을 담당합니다. 기초 학력 강화와 함께 다양한 체험 교육을 제공합니다.</p>
+                        <a href="#" class="card-link">자세히 보기 →</a>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">🏫</div>
+                        <h3>감튀고등학교</h3>
+                        <p>감튀고등학교는 고등 교육을 담당합니다. 대학 진학 준비와 함께 진로 지도를 강화합니다.</p>
+                        <a href="#" class="card-link">자세히 보기 →</a>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">🎯</div>
+                        <h3>감튀대학교</h3>
+                        <p>감튀대학교는 고등 교육 기관입니다. 전문 지식 전수와 함께 학문 연구를 추진합니다.</p>
+                        <a href="#" class="card-link">자세히 보기 →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 법률정보 섹션 -->
+        <section id="law" class="section section-white">
+            <div class="container">
+                <div class="section-title">
+                    <h2>법률정보</h2>
+                    <p>감자튀김 공화국의 주요 법률을 안내합니다</p>
+                </div>
+
+                <div class="grid grid-3">
+                    <div class="card">
+                        <div class="card-icon">📖</div>
+                        <h3>헌법</h3>
+                        <p>감자튀김 공화국 헌법은 국가의 기본 법칙입니다. 국민의 기본권 보장과 국가 조직 체계를 규정합니다.</p>
+                        <a href="#" class="card-link">자세히 보기 →</a>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">⚖️</div>
+                        <h3>민법</h3>
+                        <p>민법은 국민 간의 권리와 의무 관계를 규정합니다. 재산권, 계약, 가족 관계 등을 다룹니다.</p>
+                        <a href="#" class="card-link">자세히 보기 →</a>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">🚔</div>
+                        <h3>형법</h3>
+                        <p>형법은 범죄와 형벌에 관한 법률입니다. 국민의 안전과 사회 질서 유지를 위해 제정되었습니다.</p>
+                        <a href="#" class="card-link">자세히 보기 →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 소식 섹션 -->
+        <section id="news" class="section section-light">
+            <div class="container">
+                <div class="section-title">
+                    <h2>소식</h2>
+                    <p>감자튀김 공화국의 최신 소식을 확인하세요</p>
+                </div>
+
+                <div class="news-featured">
+                    <h3>🔔 주요 공지사항</h3>
+                    <p>감자튀김 공화국 건국 기념일 행사가 다음 달 15일에 개최됩니다. 국민 여러분의 많은 참여를 바랍니다.</p>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-button active" data-tab="notice">공지사항</button>
+                        <button class="tab-button" data-tab="news-tab">뉴스</button>
+                        <button class="tab-button" data-tab="press">보도자료</button>
+                        <button class="tab-button" data-tab="event">행사안내</button>
+                    </div>
+
+                    <div id="notice" class="tab-content active">
+                        <ul class="post-list">
+                            <li class="post-item">
+                                <span class="post-title">2026년 상반기 정책 방향 발표</span>
+                                <div class="post-meta">
+                                    <span class="post-date">2026-06-10</span>
+                                    <span class="post-category">공지</span>
+                                </div>
+                            </li>
+                            <li class="post-item">
+                                <span class="post-title">국가 디지털 전환 추진 계획 안내</span>
+                                <div class="post-meta">
+                                    <span class="post-date">2026-06-08</span>
+                                    <span class="post-category">공지</span>
+                                </div>
+                            </li>
+                            <li class="post-item">
+                                <span class="post-title">국민 의견 수렴 기간 연장 안내</span>
+                                <div class="post-meta">
+                                    <span class="post-date">2026-06-05</span>
+                                    <span class="post-category">공지</span>
+                                </div>
+                            </li>
+                            <li class="post-item">
+                                <span class="post-title">공공 서비스 개선 설문조사 참여 안내</span>
+                                <div class="post-meta">
+                                    <span class="post-date">2026-06-01</span>
+                                    <span class="post-category">공지</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div id="news-tab" class="tab-content">
+                        <ul class="post-list">
+                            <li class="post-item">
+                                <span class="post-title">감자튀김 공화국, 국제 무역 협정 체결</span>
+                                <div class="post-meta">
+                                    <span class="post-date">2026-06-09</span>
+                                    <span class="post-category">뉴스</span>
+                                </div>
+                            </li>
+                            <li class="post-item">
+                                <span class="post-title">신규 기술 개발 프로젝트 시작</span>
+                                <div class="post-meta">
+                                    <span class="post-date">2026-06-07</span>
+                                    <span class="post-category">뉴스</span>
+                                </div>
+                            </li>
+                            <li class="post-item">
+                                <span class="post-title">국가 경제 성장률 발표</span>
+                                <div class="post-meta">
+                                    <span class="post-date">2026-06-04</span>
+                                    <span class="post-category">뉴스</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div id="press" class="tab-content">
+                        <ul class="post-list">
+                            <li class="post-item">
+                                <span class="post-title">[보도자료] 새로운 교육 정책 발표</span>
+                                <div class="post-meta">
+                                    <span class="post-date">2026-06-06</span>
+                                    <span class="post-category">보도</span>
+                                </div>
+                            </li>
+                            <li class="post-item">
+                                <span class="post-title">[보도자료] 환경 보호 캠페인 시작</span>
+                                <div class="post-meta">
+                                    <span class="post-date">2026-06-03</span>
+                                    <span class="post-category">보도</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div id="event" class="tab-content">
+                        <ul class="post-list">
+                            <li class="post-item">
+                                <span class="post-title">건국 기념일 행사 개최 - 6월 15일</span>
+                                <div class="post-meta">
+                                    <span class="post-date">2026-06-11</span>
+                                    <span class="post-category">행사</span>
+                                </div>
+                            </li>
+                            <li class="post-item">
+                                <span class="post-title">국가 문화 축제 개최 - 7월 1일~31일</span>
+                                <div class="post-meta">
+                                    <span class="post-date">2026-06-02</span>
+                                    <span class="post-category">행사</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 자료실 섹션 -->
+        <section id="resources" class="section section-white">
+            <div class="container">
+                <div class="section-title">
+                    <h2>자료실</h2>
+                    <p>감자튀김 공화국의 공식 자료를 다운로드하세요</p>
+                </div>
+
+                <ul class="resource-list">
+                    <li class="resource-item">
+                        <div class="resource-icon">🚩</div>
+                        <div class="resource-info">
+                            <h4>국기 이미지 파일</h4>
+                            <p>감자튀김 공화국의 국기 이미지를 다양한 형식으로 제공합니다. (PNG, SVG, AI)</p>
+                        </div>
+                        <a href="#" class="btn btn-small btn-outline">다운로드</a>
+                    </li>
+
+                    <li class="resource-item">
+                        <div class="resource-icon">📄</div>
+                        <div class="resource-info">
+                            <h4>헌법 및 주요 법령</h4>
+                            <p>감자튀김 공화국 헌법과 주요 법령을 PDF 형식으로 제공합니다.</p>
+                        </div>
+                        <a href="#" class="btn btn-small btn-outline">다운로드</a>
+                    </li>
+
+                    <li class="resource-item">
+                        <div class="resource-icon">🎨</div>
+                        <div class="resource-info">
+                            <h4>로고 파일</h4>
+                            <p>감자튀김 공화국의 공식 로고를 다양한 형식으로 제공합니다. (PNG, SVG, EPS)</p>
+                        </div>
+                        <a href="#" class="btn btn-small btn-outline">다운로드</a>
+                    </li>
+
+                    <li class="resource-item">
+                        <div class="resource-icon">📢</div>
+                        <div class="resource-info">
+                            <h4>홍보 자료 및 팜플렛</h4>
+                            <p>감자튀김 공화국을 소개하는 홍보 자료와 팜플렛을 제공합니다.</p>
+                        </div>
+                        <a href="#" class="btn btn-small btn-outline">다운로드</a>
+                    </li>
+
+                    <li class="resource-item">
+                        <div class="resource-icon">📊</div>
+                        <div class="resource-info">
+                            <h4>통계 및 현황 자료</h4>
+                            <p>국가의 주요 통계 및 현황 자료를 엑셀 형식으로 제공합니다.</p>
+                        </div>
+                        <a href="#" class="btn btn-small btn-outline">다운로드</a>
+                    </li>
+
+                    <li class="resource-item">
+                        <div class="resource-icon">📹</div>
+                        <div class="resource-info">
+                            <h4>영상 자료</h4>
+                            <p>감자튀김 공화국을 소개하는 공식 영상 자료를 제공합니다.</p>
+                        </div>
+                        <a href="#" class="btn btn-small btn-outline">보기</a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 문의 섹션 -->
+        <section id="contact" class="section section-light">
+            <div class="container">
+                <div class="section-title">
+                    <h2>문의</h2>
+                    <p>감자튀김 공화국에 대해 궁금한 점을 문의하세요</p>
+                </div>
+
+                <div class="grid grid-2">
+                    <div>
+                        <h3>연락처 정보</h3>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <h4>📧 이메일</h4>
+                                <p><a href="mailto:info@frenchfries.gov">info@frenchfries.gov</a></p>
+                            </div>
+                            <div class="contact-item">
+                                <h4>📞 전화</h4>
+                                <p><a href="tel:+82-2-1234-5678">+82-2-1234-5678</a></p>
+                            </div>
+                            <div class="contact-item">
+                                <h4>📍 주소</h4>
+                                <p>감자튀김 공화국 행정수도<br>중앙로 1번지</p>
+                            </div>
+                            <div class="contact-item">
+                                <h4>🕐 운영시간</h4>
+                                <p>평일 09:00 ~ 18:00<br>(공휴일 제외)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3>문의 양식</h3>
+                        <form id="contactForm" class="contact-form">
+                            <div class="form-group">
+                                <label for="name">이름 <span style="color: #d32f2f;">*</span></label>
+                                <input type="text" id="name" name="name" required aria-required="true">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">이메일 <span style="color: #d32f2f;">*</span></label>
+                                <input type="email" id="email" name="email" required aria-required="true">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone">전화번호</label>
+                                <input type="tel" id="phone" name="phone">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="category">문의 분류 <span style="color: #d32f2f;">*</span></label>
+                                <select id="category" name="category" required aria-required="true">
+                                    <option value="">선택하세요</option>
+                                    <option value="general">일반 문의</option>
+                                    <option value="service">서비스 문의</option>
+                                    <option value="complaint">불만 사항</option>
+                                    <option value="suggestion">건의사항</option>
+                                    <option value="other">기타</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="message">문의 내용 <span style="color: #d32f2f;">*</span></label>
+                                <textarea id="message" name="message" required aria-required="true"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">문의 제출</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ================================================================
+         푸터
+         ================================================================ -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>국가소개</h4>
+                    <ul>
+                        <li><a href="#intro">국가 개요</a></li>
+                        <li><a href="#intro">건국 이념</a></li>
+                        <li><a href="#intro">국가 상징</a></li>
+                        <li><a href="#intro">국가 연혁</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>정부</h4>
+                    <ul>
+                        <li><a href="#government">대통령</a></li>
+                        <li><a href="#government">행정부</a></li>
+                        <li><a href="#government">국가평원</a></li>
+                        <li><a href="#government">독립기관</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>정보</h4>
+                    <ul>
+                        <li><a href="#law">법률정보</a></li>
+                        <li><a href="#resources">자료실</a></li>
+                        <li><a href="#news">소식</a></li>
+                        <li><a href="#contact">문의</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>정책</h4>
+                    <ul>
+                        <li><a href="#">개인정보처리방침</a></li>
+                        <li><a href="#">이용약관</a></li>
+                        <li><a href="#">저작권 안내</a></li>
+                        <li><a href="#">사이트맵</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 감자튀김 공화국 정부. All rights reserved.</p>
+                <p>Republic of French Fries Official Portal</p>
+            </div>
         </div>
+    </footer>
 
-      </div>
-    </div>
-  </section>
-
-  <!-- ================================================================
-       퀵 링크 바
-       ================================================================ -->
-  <section class="quick-links" aria-label="주요 바로가기">
-    <div class="container">
-      <nav class="quick-links-grid" aria-label="빠른 메뉴">
-        <a href="#" class="quick-link">
-          <span class="quick-link-icon" aria-hidden="true">📋</span>
-          민원 신청
-        </a>
-        <a href="#" class="quick-link">
-          <span class="quick-link-icon" aria-hidden="true">🪪</span>
-          신분증 발급
-        </a>
-        <a href="#" class="quick-link">
-          <span class="quick-link-icon" aria-hidden="true">🗳️</span>
-          전자 투표
-        </a>
-        <a href="#" class="quick-link">
-          <span class="quick-link-icon" aria-hidden="true">🏥</span>
-          의료 서비스
-        </a>
-        <a href="#" class="quick-link">
-          <span class="quick-link-icon" aria-hidden="true">🎓</span>
-          교육 정보
-        </a>
-        <a href="#" class="quick-link">
-          <span class="quick-link-icon" aria-hidden="true">🌐</span>
-          외교 안내
-        </a>
-        <a href="#" class="quick-link">
-          <span class="quick-link-icon" aria-hidden="true">💰</span>
-          세금 납부
-        </a>
-        <a href="#" class="quick-link">
-          <span class="quick-link-icon" aria-hidden="true">📞</span>
-          민원 전화
-        </a>
-      </nav>
-    </div>
-  </section>
-
-  <!-- ================================================================
-       국가 소개
-       ================================================================ -->
-  <section class="section" id="about" aria-labelledby="about-heading">
-    <div class="container">
-      <div class="section-head fade-in">
-        <span class="section-eyebrow">국가 소개</span>
-        <h2 class="section-title" id="about-heading">감자튀김 공화국 개요</h2>
-        <p class="section-desc">황금빛 자유의 나라, 감자튀김 공화국의 역사와 이념을 소개합니다.</p>
-        <div class="divider-gold"></div>
-      </div>
-
-      <div class="about-grid">
-        <!-- 국가 개요 텍스트 -->
-        <div class="about-content fade-in">
-          <p>
-            감자튀김 공화국은 1947년 독립 이후 꾸준히 성장해 온 민주공화국입니다.
-            수도 골든시티(Golden City)를 중심으로 총 5개 주(州)와 1개의 특별자치시로
-            구성되어 있으며, 국토 면적은 약 12,450㎢에 달합니다.
-          </p>
-          <p>
-            국가 경제는 감자 농업 및 식품 가공 산업을 기반으로 하되, 최근에는
-            기술 혁신 및 관광 산업을 적극 육성하고 있습니다. 1인당 GDP는
-            약 1,923,829,123 감튀원(FRW)로 안정적인 성장세를 보이고 있습니다.
-          </p>
-          <p>
-            공용어는 국어(감자어)이며 영어를 제2공용어로 지정하고 있습니다.
-            종교의 자유는 헌법으로 보장되며, 다양한 문화가 공존하는
-            다문화 국가로 국제 사회에서 높은 평가를 받고 있습니다.
-          </p>
-
-          <!-- 주요 특징 -->
-          <div class="about-feature-list" aria-label="주요 특징">
-            <div class="about-feature">
-              <div class="about-feature-icon" aria-hidden="true">🗳️</div>
-              <div class="about-feature-text">
-                <strong>민주적 선거 제도</strong>
-                <span>5년 단임 직선제 대통령제와 단원제 국회를 운영합니다.</span>
-              </div>
-            </div>
-            <div class="about-feature">
-              <div class="about-feature-icon" aria-hidden="true">⚖️</div>
-              <div class="about-feature-text">
-                <strong>독립적 사법 기관</strong>
-                <span>최고재판소를 중심으로 삼권분립이 철저히 보장됩니다.</span>
-              </div>
-            </div>
-            <div class="about-feature">
-              <div class="about-feature-icon" aria-hidden="true">🌍</div>
-              <div class="about-feature-text">
-                <strong>국제 협력 강화</strong>
-                <span>UN 가입국으로 47개국과 외교 관계를 맺고 있습니다.</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 건국 이념 패널 -->
-        <div class="about-ideals fade-in" aria-labelledby="ideal-heading">
-          <div class="ideal-title" id="ideal-heading">
-            <span aria-hidden="true">⚜️</span> 건국 이념
-          </div>
-          <div class="ideal-item">
-            <div class="ideal-num" aria-hidden="true">1</div>
-            <div class="ideal-text">
-              <strong>자유와 바삭함 (Liberty & Crispness)</strong>
-              <span>모든 시민은 언론·집회·종교의 자유와 함께 원하는 조리법을 추구할 자유를 갖습니다.</span>
-            </div>
-          </div>
-          <div class="ideal-item">
-            <div class="ideal-num" aria-hidden="true">2</div>
-            <div class="ideal-text">
-              <strong>평등과 황금빛 정의 (Equality & Golden Justice)</strong>
-              <span>법 앞에 모든 시민은 평등하며, 어떠한 차별도 용납하지 않습니다.</span>
-            </div>
-          </div>
-          <div class="ideal-item">
-            <div class="ideal-num" aria-hidden="true">3</div>
-            <div class="ideal-text">
-              <strong>번영과 소금 (Prosperity & Salt)</strong>
-              <span>지속 가능한 경제 성장을 통해 모든 시민의 행복을 추구합니다.</span>
-            </div>
-          </div>
-          <div class="ideal-item">
-            <div class="ideal-num" aria-hidden="true">4</div>
-            <div class="ideal-text">
-              <strong>연대와 케첩 (Solidarity & Ketchup)</strong>
-              <span>공동체 정신과 상호 부조를 통해 더불어 사는 사회를 만들어 갑니다.</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================================================================
-       정부 기관
-       ================================================================ -->
-  <section class="section section-alt" id="gov" aria-labelledby="gov-heading">
-    <div class="container">
-      <div class="section-head fade-in">
-        <span class="section-eyebrow">정부 기관</span>
-        <h2 class="section-title" id="gov-heading">주요 정부 기관</h2>
-        <p class="section-desc">감자튀김 공화국을 이끌어 가는 핵심 정부 기관을 소개합니다.</p>
-        <div class="divider-gold"></div>
-      </div>
-
-      <div class="gov-grid">
-        <!-- 대통령 -->
-        <article class="gov-card fade-in" aria-labelledby="gov-president">
-          <div class="gov-card-icon" aria-hidden="true">🏛️</div>
-          <div class="gov-card-title" id="gov-president">대통령실</div>
-          <div class="gov-card-incumbent">현직: 황금튀김 대통령</div>
-          <p class="gov-card-desc">
-            국가 원수이자 행정부의 수반으로서 국가의 통합과 헌법 수호,
-            외교·국방의 총책임자 역할을 수행합니다. 임기 5년 단임제.
-          </p>
-        </article>
-
-        <!-- 국회 -->
-        <article class="gov-card fade-in" aria-labelledby="gov-assembly">
-          <div class="gov-card-icon" aria-hidden="true">🗳️</div>
-          <div class="gov-card-title" id="gov-assembly">감자튀김 국회</div>
-          <div class="gov-card-incumbent">의장: 소금양념 의원</div>
-          <p class="gov-card-desc">
-            단원제 국회로, 총 180석 의원으로 구성됩니다. 입법권을 행사하고
-            예산안을 심의·의결하며 행정부를 견제합니다.
-          </p>
-        </article>
-
-        <!-- 행정부 -->
-        <article class="gov-card fade-in" aria-labelledby="gov-admin">
-          <div class="gov-card-icon" aria-hidden="true">📋</div>
-          <div class="gov-card-title" id="gov-admin">국무총리실 · 행정부</div>
-          <div class="gov-card-incumbent">국무총리: 케첩달콤 총리</div>
-          <p class="gov-card-desc">
-            대통령을 보좌하며 12개 부처를 총괄합니다. 농업부, 식품안전부,
-            외교부, 국방부 등 각 부처가 행정을 담당합니다.
-          </p>
-        </article>
-
-        <!-- 사법부 -->
-        <article class="gov-card fade-in" aria-labelledby="gov-judiciary">
-          <div class="gov-card-icon" aria-hidden="true">⚖️</div>
-          <div class="gov-card-title" id="gov-judiciary">최고재판소</div>
-          <div class="gov-card-incumbent">대법원장: 바삭공정 판사</div>
-          <p class="gov-card-desc">
-            독립적인 사법 기관으로서 법률의 최종 해석과 헌법 수호의 임무를
-            수행합니다. 9인의 대법관으로 구성됩니다.
-          </p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================================================================
-       국가 통계
-       ================================================================ -->
-  <section class="section section-gold" id="stats" aria-labelledby="stats-heading">
-    <div class="container">
-      <div class="section-head fade-in">
-        <span class="section-eyebrow">국가 통계</span>
-        <h2 class="section-title" id="stats-heading">주요 지표 &amp; 현황</h2>
-        <p class="section-desc">2025년 기준 감자튀김 공화국의 핵심 국가 통계입니다.</p>
-        <div class="divider-gold"></div>
-      </div>
-
-      <div class="stats-grid">
-        <div class="stat-card highlight fade-in">
-          <div class="stat-card-icon" aria-hidden="true">📐</div>
-          <span class="stat-card-value">6,213,763,071,874.64 ㎢</span>
-          <div class="stat-card-label">영토 면적</div>
-          <p class="stat-card-sub">세계 1위 · 농지 비율 12%</p>
-        </div>
-        <div class="stat-card fade-in">
-          <div class="stat-card-icon" aria-hidden="true">👥</div>
-          <span class="stat-card-value">372,825,784,310,000</span>
-          <div class="stat-card-label">총 인구</div>
-          <p class="stat-card-sub">인구 성장률 +1.3% (2026)</p>
-        </div>
-        <div class="stat-card fade-in">
-          <div class="stat-card-icon" aria-hidden="true">🏙️</div>
-          <span class="stat-card-value">3 대도시</span>
-          <div class="stat-card-label">주요 도시</div>
-          <p class="stat-card-sub">감튀특별시 · 기름도 · 바삭도</p>
-        </div>
-        <div class="stat-card fade-in">
-          <div class="stat-card-icon" aria-hidden="true">💰</div>
-          <span class="stat-card-value">₩ 1,923,829,123</span>
-          <div class="stat-card-label">1인당 GDP</div>
-          <p class="stat-card-sub">국내총생산 1,441,674,645,632,234,934,254 FRW</p>
-        </div>
-        <div class="stat-card fade-in">
-          <div class="stat-card-icon" aria-hidden="true">🥔</div>
-          <span class="stat-card-value">연 820만 톤</span>
-          <div class="stat-card-label">감자 생산량</div>
-          <p class="stat-card-sub">세계 최대 1인당 소비국</p>
-        </div>
-        <div class="stat-card fade-in">
-          <div class="stat-card-icon" aria-hidden="true">🎓</div>
-          <span class="stat-card-value">98.7%</span>
-          <div class="stat-card-label">문해율</div>
-          <p class="stat-card-sub">교육 지수 세계 14위</p>
-        </div>
-        <div class="stat-card fade-in">
-          <div class="stat-card-icon" aria-hidden="true">🌡️</div>
-          <span class="stat-card-value">+3.8%</span>
-          <div class="stat-card-label">GDP 성장률</div>
-          <p class="stat-card-sub">3년 연속 플러스 성장</p>
-        </div>
-        <div class="stat-card fade-in">
-          <div class="stat-card-icon" aria-hidden="true">🕊️</div>
-          <span class="stat-card-value">195개국</span>
-          <div class="stat-card-label">수교 국가</div>
-          <p class="stat-card-sub">UN 가입 · 다자외교 적극 참여</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================================================================
-       최신 소식
-       ================================================================ -->
-  <section class="section" id="news" aria-labelledby="news-heading">
-    <div class="container">
-      <div class="section-head fade-in">
-        <span class="section-eyebrow">최신 소식</span>
-        <h2 class="section-title" id="news-heading">뉴스 &amp; 공지사항</h2>
-        <p class="section-desc">감자튀김 공화국의 가장 최근 소식을 확인하세요.</p>
-        <div class="divider-gold"></div>
-      </div>
-
-      <div class="news-section-grid">
-
-        <!-- 뉴스 -->
-        <div class="fade-in">
-          <h3 class="news-col-title">
-            <span aria-hidden="true">📰</span> 주요 뉴스
-          </h3>
-
-          <article class="news-card" aria-labelledby="news1-title">
-            <div class="news-card-thumb" aria-hidden="true">🤝</div>
-            <div class="news-card-body">
-              <span class="news-badge">외교</span>
-              <div class="news-card-title-text" id="news1-title">
-                감자튀김 대통령, 이웃 나라 '돈까스 왕국'과 우호협력 조약 체결
-              </div>
-              <div class="news-card-date">2025년 11월 18일</div>
-            </div>
-          </article>
-
-          <article class="news-card" aria-labelledby="news2-title">
-            <div class="news-card-thumb" aria-hidden="true">🚀</div>
-            <div class="news-card-body">
-              <span class="news-badge">경제</span>
-              <div class="news-card-title-text" id="news2-title">
-                국내총생산 3.8% 성장 달성…3년 연속 플러스 성장세 기록
-              </div>
-              <div class="news-card-date">2025년 11월 10일</div>
-            </div>
-          </article>
-
-          <article class="news-card" aria-labelledby="news3-title">
-            <div class="news-card-thumb" aria-hidden="true">🌱</div>
-            <div class="news-card-body">
-              <span class="news-badge">환경</span>
-              <div class="news-card-title-text" id="news3-title">
-                탄소 중립 감자 재배법 전국 확대 시범 사업 착수
-              </div>
-              <div class="news-card-date">2025년 10월 29일</div>
-            </div>
-          </article>
-        </div>
-
-        <!-- 공지사항 -->
-        <div class="fade-in">
-          <h3 class="news-col-title">
-            <span aria-hidden="true">📢</span> 공지사항
-          </h3>
-
-          <div role="list" aria-label="공지사항 목록">
-            <div class="notice-item" role="listitem">
-              <span class="notice-badge urgent" aria-label="긴급">긴급</span>
-              <div class="notice-text">
-                <strong>2026년 감자 수확 축제 교통 통제 안내 (6/12~7/3)</strong>
-                <span>감튀특별시 중심부 일대 차량 통행 제한. 대중교통 이용 권장.</span>
-              </div>
-            </div>
-            <div class="notice-item" role="listitem">
-              <span class="notice-badge" aria-label="공지">공지</span>
-              <div class="notice-text">
-                <strong>제5회 전국 감자튀김 요리 경연대회 참가자 모집</strong>
-                <span>접수 기간: 2026.7.01 ~ 2026.7.20 / 전국 18세 이상 누구나</span>
-              </div>
-            </div>
-            <div class="notice-item" role="listitem">
-              <span class="notice-badge" aria-label="공지">공지</span>
-              <div class="notice-text">
-                <strong>2026년 국가 예산안 국회 제출 완료</strong>
-                <span>총 규모 4212.7조 FRW, 교육·복지·기술 혁신 분야 중점 배정</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  </main><!-- /main -->
-
-  <!-- ================================================================
-       연락처 & 사이트 정보 포함 푸터
-       ================================================================ -->
-  <footer class="site-footer" id="contact" aria-label="사이트 하단 정보">
-    <div class="container">
-      <div class="footer-grid">
-
-        <!-- 브랜드 정보 -->
-        <div class="footer-brand">
-          <div class="footer-brand-name">감자튀김 공화국</div>
-          <div class="footer-brand-en">Republic of French Fries · Official Portal</div>
-          <p class="footer-brand-desc">
-            자유·평등·바삭함의 건국 이념 아래 모든 시민이 행복하게
-            살아갈 수 있는 나라를 만들어 갑니다. 이 포털은 감자튀김 공화국
-            전자정부 표준에 따라 운영됩니다.
-          </p>
-        </div>
-
-        <!-- 주요 메뉴 -->
-        <div>
-          <div class="footer-col-title">주요 메뉴</div>
-          <nav class="footer-links" aria-label="푸터 메뉴">
-            <a href="#about">국가 소개</a>
-            <a href="#gov">정부 기관</a>
-            <a href="#stats">국가 통계</a>
-            <a href="#news">최신 소식</a>
-            <a href="#">대외 공개 자료</a>
-          </nav>
-        </div>
-
-        <!-- 민원 서비스 -->
-        <div>
-          <div class="footer-col-title">민원 서비스</div>
-          <nav class="footer-links" aria-label="민원 서비스 메뉴">
-            <a href="#">전자 민원 신청</a>
-            <a href="#">신분증 발급</a>
-            <a href="#">사업자 등록</a>
-            <a href="#">세금 납부 안내</a>
-            <a href="#">민원 처리 현황</a>
-          </nav>
-        </div>
-
-        <!-- 연락처 -->
-        <div id="contact-info">
-          <div class="footer-col-title">연락처</div>
-          <address style="font-style:normal;">
-            <div class="footer-contact-item">
-              <span aria-hidden="true">📍</span>
-              <span>감튀특별시 자유대로 1번지<br/>감자튀김 공화국 정부청사</span>
-            </div>
-            <div class="footer-contact-item">
-              <span aria-hidden="true">📞</span>
-              <span>민원 대표 전화: 1234-5678</span>
-            </div>
-            <div class="footer-contact-item">
-              <span aria-hidden="true">✉️</span>
-              <span>info@gov.frenchfries.rp</span>
-            </div>
-            <div class="footer-contact-item">
-              <span aria-hidden="true">🕐</span>
-              <span>평일 09:00 – 18:00<br/>(국경일 및 공휴일 휴무)</span>
-            </div>
-          </address>
-        </div>
-
-      </div>
-
-      <!-- 저작권 바 -->
-      <div class="footer-bottom">
-        <span>© 2026 감자튀김 공화국. 모든 권리 보유. 본 사이트는 가상 국가 감자튀김 공화국의 사이트이며 단순히 유머를 위한 사이트입니다.</span>
-        <nav class="footer-bottom-links" aria-label="하단 법적 메뉴">
-          <a href="#">개인정보 처리방침</a>
-          <a href="#">이용약관</a>
-          <a href="#">웹 접근성 안내</a>
-          <a href="#">저작권 정책</a>
-        </nav>
-      </div>
-    </div>
-  </footer>
-
-  <!-- 스크롤 투 탑 버튼 -->
-  <button id="scroll-top" aria-label="맨 위로 이동">▲</button>
-
-  <!-- ================================================================
-       JavaScript
-       ================================================================ -->
-  <script>
-    'use strict';
-
-    /* ---------------------------------------------------------------
-       1. 모바일 네비게이션 토글
-       --------------------------------------------------------------- */
-    (function () {
-      const header  = document.getElementById('site-header');
-      const toggle  = document.getElementById('nav-toggle');
-
-      if (!toggle || !header) return;
-
-      toggle.addEventListener('click', function () {
-        const isOpen = header.classList.toggle('nav-open');
-        toggle.setAttribute('aria-expanded', isOpen.toString());
-        toggle.setAttribute('aria-label', isOpen ? '메뉴 닫기' : '메뉴 열기');
-      });
-
-      // 링크 클릭 시 메뉴 닫기
-      document.getElementById('main-nav').querySelectorAll('a').forEach(function (link) {
-        link.addEventListener('click', function () {
-          header.classList.remove('nav-open');
-          toggle.setAttribute('aria-expanded', 'false');
-          toggle.setAttribute('aria-label', '메뉴 열기');
-        });
-      });
-    }());
-
-    /* ---------------------------------------------------------------
-       2. 스크롤 이벤트: 스크롤 투 탑 버튼 표시/숨김
-       --------------------------------------------------------------- */
-    (function () {
-      const btn = document.getElementById('scroll-top');
-      if (!btn) return;
-
-      window.addEventListener('scroll', function () {
-        if (window.scrollY > 400) {
-          btn.classList.add('visible');
-        } else {
-          btn.classList.remove('visible');
-        }
-      }, { passive: true });
-
-      btn.addEventListener('click', function () {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-    }());
-
-    /* ---------------------------------------------------------------
-       3. 인터섹션 옵저버: .fade-in 애니메이션
-       --------------------------------------------------------------- */
-    (function () {
-      // prefers-reduced-motion 존중
-      var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (reducedMotion) {
-        document.querySelectorAll('.fade-in').forEach(function (el) {
-          el.classList.add('visible');
-        });
-        return;
-      }
-
-      var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target); // 한 번만 트리거
-          }
-        });
-      }, { threshold: 0.12 });
-
-      document.querySelectorAll('.fade-in').forEach(function (el) {
-        observer.observe(el);
-      });
-    }());
-
-    /* ---------------------------------------------------------------
-       4. 활성 네비게이션 하이라이트 (스크롤 spy)
-       --------------------------------------------------------------- */
-    (function () {
-      var sections = document.querySelectorAll('section[id]');
-      var navLinks = document.querySelectorAll('.main-nav a[href^="#"]');
-
-      if (!sections.length || !navLinks.length) return;
-
-      function setActive () {
-        var scrollY = window.scrollY + 120;
-        var current = '';
-
-        sections.forEach(function (sec) {
-          if (sec.offsetTop <= scrollY) {
-            current = sec.getAttribute('id');
-          }
-        });
-
-        navLinks.forEach(function (link) {
-          link.classList.remove('active');
-          link.removeAttribute('aria-current');
-          if (link.getAttribute('href') === '#' + current) {
-            link.classList.add('active');
-            link.setAttribute('aria-current', 'page');
-          }
-        });
-      }
-
-      window.addEventListener('scroll', setActive, { passive: true });
-      setActive(); // 초기 실행
-    }());
-
-    /* ---------------------------------------------------------------
-       5. 통계 카드 숫자 카운트업 애니메이션
-       --------------------------------------------------------------- */
-    (function () {
-      // 각 stat-card-value 요소에서 숫자를 추출하여 카운트업
-      var cards = document.querySelectorAll('.stat-card-value');
-
-      function parseNum (str) {
-        // 숫자 부분만 추출 (쉼표, 소수점 포함)
-        var match = str.match(/[\d,]+\.?\d*/);
-        if (!match) return null;
-        return parseFloat(match[0].replace(/,/g, ''));
-      }
-
-      function formatNum (val, original) {
-        // 원래 문자열의 형식을 최대한 유지
-        var numStr = val >= 1000
-          ? val.toLocaleString('ko-KR', { maximumFractionDigits: 0 })
-          : val.toLocaleString('ko-KR', { maximumFractionDigits: 1 });
-        return original.replace(/[\d,]+\.?\d*/, numStr);
-      }
-
-      var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-
-          var el = entry.target;
-          var original = el.getAttribute('data-original') || el.textContent;
-          el.setAttribute('data-original', original);
-
-          var target = parseNum(original);
-          if (target === null) return;
-
-          var start = 0;
-          var duration = 1200;
-          var startTime = null;
-
-          function step (timestamp) {
-            if (!startTime) startTime = timestamp;
-            var progress = Math.min((timestamp - startTime) / duration, 1);
-            // easeOutQuart
-            var eased = 1 - Math.pow(1 - progress, 4);
-            var current = Math.floor(eased * target);
-            el.textContent = formatNum(current, original);
-            if (progress < 1) requestAnimationFrame(step);
-            else el.textContent = original;
-          }
-
-          requestAnimationFrame(step);
-          observer.unobserve(el);
-        });
-      }, { threshold: 0.5 });
-
-      cards.forEach(function (card) { observer.observe(card); });
-    }());
-  </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
